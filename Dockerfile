@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ .
 
 # Exposer le port sur lequel l'application Flask écoute
-EXPOSE 5001
+EXPOSE 5010
 
 # Définir la commande pour exécuter l'application Flask
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5010"]

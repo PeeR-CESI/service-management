@@ -1,11 +1,7 @@
 from flask import Blueprint, request, jsonify
 from .service import create_service, update_service, delete_service, get_service
 
-service_bp = Blueprint('your_service', __name__)
-
-@service_bp.route('/')
-def hello_world():
-    return jsonify({"message": "Hello World"})
+service_bp = Blueprint('service', __name__)
 
 @service_bp.route('/create', methods=['POST'])
 def create():
