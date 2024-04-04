@@ -11,15 +11,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copier le reste des fichiers du projet dans le conteneur
-COPY src/ ./src/
-COPY app.py .
+COPY src/ .
 
 # Exposer le port sur lequel l'application Flask écoute
 EXPOSE 5000
 
-# Définir les variables d'environnement nécessaires pour Flask
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
 # Définir la commande pour exécuter l'application Flask
-CMD ["flask", "run"]
+CMD ["flask", "run", "--host=0.0.0.0"]
