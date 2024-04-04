@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 
 # Connexion à MongoDB
-client = MongoClient("mongodb://localhost:27017")
+client = MongoClient("mongodb://admin:admin@mongodb:27017")
 db = client.your_service_db
 services_collection = db.services
 
