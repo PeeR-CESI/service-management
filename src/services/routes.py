@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from .service import create_service, update_service, delete_service, get_service
 
 service_bp = Blueprint('service', __name__)
