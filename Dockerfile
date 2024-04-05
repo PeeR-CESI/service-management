@@ -10,11 +10,14 @@ COPY requirements.txt .
 # Installer les dépendances listées dans requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier le reste des fichiers du projet dans le conteneur
-COPY src/ .
+# Copier le dossier src entier dans le répertoire de travail /app du conteneur
+COPY src .
 
 # Exposer le port sur lequel l'application Flask écoute
 EXPOSE 5010
+
+# Définir la variable d'environnement FLASK_APP
+ENV FLASK_APP=app.py
 
 # Définir la commande pour exécuter l'application Flask
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5010"]
