@@ -17,7 +17,7 @@ COPY src .
 EXPOSE 5010
 
 # Définir la variable d'environnement FLASK_APP
-ENV FLASK_APP=app.py
+ENV FLASK_APP=src/app.py
 
 # Définir la commande pour exécuter l'application Flask
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5010"]
