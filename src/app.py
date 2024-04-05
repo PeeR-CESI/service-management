@@ -1,7 +1,7 @@
 from flask import Flask
-from src.services.routes import service_bp
-from src.helloWorld.routes import helloWorld_bp
-from src.sell.routes import sell_bp
+from .services.routes import service_bp
+from .helloWorld.routes import helloWorld_bp
+from .sell.routes import sell_bp
 from flasgger import Swagger
 
 app = Flask(__name__)
