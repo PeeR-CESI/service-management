@@ -26,6 +26,9 @@ def create():
             description:
               type: string
               description: Description du service.
+            price:
+              type: string
+              description: Description du service.
     responses:
       201:
         description: Service créé avec succès.

@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
-client = MongoClient("mongodb://admin:admin@localhost:27017/admin")
+client = MongoClient("mongodb://admin:admin@mongodb:27017")
 db = client.your_service_db
 sold_services_collection = db.sold_services
 
