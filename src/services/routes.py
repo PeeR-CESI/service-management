@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from .service import create_service, update_service, delete_service, get_service
+from .service import get_all_services, create_service, update_service, delete_service, get_service
 
 service_bp = Blueprint('service', __name__)
 
@@ -112,3 +112,17 @@ def get(service_id):
         description: Service non trouvé.
     """
     return get_service(service_id)
+
+@service_bp.route('/all', methods=['GET'])
+def get_services():
+    """Récupère tous les services disponibles
+    ---
+    tags:
+      - service
+    responses:
+      200:
+        description: Liste de tous les services disponibles
+      404:
+        description: Aucun service trouvé
+    """
+    return get_all_services()

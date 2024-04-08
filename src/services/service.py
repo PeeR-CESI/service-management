@@ -23,3 +23,11 @@ def get_service(service_id):
         return jsonify(service), 200
     else:
         return jsonify({"error": "Service not found"}), 404
+
+
+def get_all_services():
+    services = Service.find_all()
+    for service in services:
+        # Convertir ObjectId en str
+        service['_id'] = str(service['_id'])
+    return jsonify(services), 200
