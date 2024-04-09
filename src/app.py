@@ -3,8 +3,11 @@ from .services.routes import service_bp
 from .helloWorld.routes import helloWorld_bp
 from .sell.routes import sell_bp
 from flasgger import Swagger
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+CORS(app)
 
 swagger_config = {
     "headers": [],
