@@ -30,6 +30,9 @@ def create():
             price:
               type: string
               description: Description du service.
+            presta_id:  # Ajoutez cette section
+              type: string
+              description: L'ID du prestataire ayant créé le service.
     responses:
       201:
         description: Service créé avec succès.
