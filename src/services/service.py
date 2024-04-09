@@ -29,5 +29,7 @@ def get_all_services():
     services = Service.find_all()
     for service in services:
         # Convertir ObjectId en str
-        service['service_id'] = str(service['service_id'])
+        service_id = service.get('_id')  # Utilisez .get() pour éviter KeyError
+        if service_id:
+            service['service_id'] = str(service_id)
     return jsonify(services), 200
