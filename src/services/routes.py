@@ -19,6 +19,7 @@ def create():
           required:
             - nom
             - description
+            - presta_id
           properties:
             nom:
               type: string
