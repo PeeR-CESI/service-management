@@ -17,6 +17,7 @@ def create_sold_service(service_id, sold_service_data):
         sold_service_data['name'] = parent_service.get("nom")
         sold_service_data['description'] = parent_service.get("description")
         sold_service_data['price'] = parent_service.get("price")
+        sold_service_data['presta_id'] = parent_service.get("presta_id")
     else:
         return jsonify({"error": "Parent service not found"}), 404
 
