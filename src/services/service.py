@@ -18,19 +18,22 @@ def delete_service(service_id):
         presta_id = service.presta_id  # Assurez-vous que cette propriété existe dans vos modèles de service
         
         # Supprimer le service
-        if Service.delete(service_id):
+        success = Service.delete(service_id)
+        if success:
             # Trouver le prestataire pour mettre à jour sa liste de services
             presta = User.query.get(presta_id)
             if presta:
                 if presta.service_ids:
                     # Convertir la chaîne en liste, retirer l'ID du service, puis reconstruire la chaîne
                     service_ids_list = presta.service_ids.split(',')
-                    if service_id in service_ids_list:
-                        service_ids_list.remove(service_id)
+                    if str(service_id) in service_ids_list:  # Assurez-vous que les types correspondent
+                        service_ids_list.remove(str(service_id))  # Convertir service_id en str si nécessaire
                         presta.service_ids = ','.join(service_ids_list)
                         db.session.commit()
             
             return jsonify({"message": "Service deleted successfully"}), 200
+        else:
+            return jsonify({"error": "Service not found"}), 404
     else:
         return jsonify({"error": "Service not found"}), 404
 
