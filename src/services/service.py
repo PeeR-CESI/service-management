@@ -1,4 +1,4 @@
-from .model import Service, User, db, make_response
+from .model import Service, User, db
 from flask import jsonify
 
 def create_service(service_data):
@@ -12,42 +12,29 @@ def update_service(service_id, service_data):
         return jsonify({"error": "Service not found"}), 404
 
 def delete_service(service_id):
-    # Trouver le service à supprimer pour obtenir l'ID du prestataire
     service = Service.find(service_id)
     if service:
-        presta_id = service.presta_id  # Assurez-vous que cette propriété existe dans vos modèles de service
-        
-        # Supprimer le service
+        presta_id = service.presta_id
         success = Service.delete(service_id)
         if success:
-            # Trouver le prestataire pour mettre à jour sa liste de services
             presta = User.query.get(presta_id)
-            if presta:
-                if presta.service_ids:
-                    # Convertir la chaîne en liste, retirer l'ID du service, puis reconstruire la chaîne
-                    service_ids_list = presta.service_ids.split(',')
-                    if str(service_id) in service_ids_list:  # Assurez-vous que les types correspondent
-                        service_ids_list.remove(str(service_id))  # Convertir service_id en str si nécessaire
-                        presta.service_ids = ','.join(service_ids_list)
-                        db.session.commit()
-            
-            response = make_response(jsonify({"message": "Service deleted successfully"}), 200)
+            if presta and presta.service_ids:
+                service_ids_list = presta.service_ids.split(',')
+                if str(service_id) in service_ids_list:
+                    service_ids_list.remove(str(service_id))
+                    presta.service_ids = ','.join(service_ids_list)
+                    db.session.commit()
+            return jsonify({"message": "Service deleted successfully"}), 200
         else:
-            response = make_response(jsonify({"error": "Service not found"}), 404)
+            return jsonify({"error": "Service not found"}), 404
     else:
-        response = make_response(jsonify({"error": "Service not found"}), 404)
-
-    # Ajouter des en-têtes CORS à la réponse
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    return response
-
+        return jsonify({"error": "Service not found"}), 404
 def get_service(service_id):
     service = Service.find(service_id)
     if service:
         return jsonify(service), 200
     else:
         return jsonify({"error": "Service not found"}), 404
-
 
 def get_all_services():
     services = Service.find_all()
