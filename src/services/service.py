@@ -1,4 +1,4 @@
-from .model import Service, User, db
+from .model import Service, User, db, make_response
 from flask import jsonify
 
 def create_service(service_data):
@@ -31,11 +31,15 @@ def delete_service(service_id):
                         presta.service_ids = ','.join(service_ids_list)
                         db.session.commit()
             
-            return jsonify({"message": "Service deleted successfully"}), 200
+            response = make_response(jsonify({"message": "Service deleted successfully"}), 200)
         else:
-            return jsonify({"error": "Service not found"}), 404
+            response = make_response(jsonify({"error": "Service not found"}), 404)
     else:
-        return jsonify({"error": "Service not found"}), 404
+        response = make_response(jsonify({"error": "Service not found"}), 404)
+
+    # Ajouter des en-têtes CORS à la réponse
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 def get_service(service_id):
     service = Service.find(service_id)
