@@ -14,19 +14,23 @@ def create_sold_service(service_id, sold_service_data):
     
     parent_service = Service.find(service_id)
     if parent_service:
-        sold_service_data['parent_service_info'] = {
-            "name": parent_service.get("nom"),
-            "description": parent_service.get("description"),
-            "price": parent_service.get("price")
-        }
+        sold_service_data['name'] = parent_service.get("nom")
+        sold_service_data['description'] = parent_service.get("description")
+        sold_service_data['price'] = parent_service.get("price")
     else:
         return jsonify({"error": "Parent service not found"}), 404
 
+    sold_service_data['status'] = "en attente"
+    
     sold_service_id = SoldService.create(sold_service_data)
     return jsonify({"message": "Sold service created successfully", "sold_service_id": sold_service_id}), 201
 
 
 def update_sold_service(sold_service_id, sold_service_data):
+    if 'status' in sold_service_data:
+        if sold_service_data['status'] not in ["validé", "refusé", "en attente"]:
+            return jsonify({"error": "Statut invalide"}), 400
+    
     if SoldService.update(sold_service_id, sold_service_data):
         return jsonify({"message": "Sold service updated successfully"}), 200
     else:
