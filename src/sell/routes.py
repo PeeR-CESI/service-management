@@ -6,7 +6,7 @@ sell_bp = Blueprint('sell_bp', __name__)
 @sell_bp.route('/', methods=['POST'])
 def create():
     """
-    Crée un nouveau service vendu
+    Crée un nouveau service vendu, incluant les informations du service parent au moment de la vente
     ---
     tags:
       - sell
@@ -30,7 +30,7 @@ def create():
               description: État d'avancement du service (chiffre de 0 à 5).
     responses:
       201:
-        description: Service vendu créé avec succès.
+        description: Service vendu créé avec succès. Les informations du service parent sont incluses.
       404:
         description: Service de base inexistant.
     """
@@ -38,77 +38,75 @@ def create():
     service_id = data.get('service_id')
     return create_sold_service(service_id, data)
 
-@sell_bp.route('/<sold_service_id>', methods=['PUT'])
-def update(sold_service_id):
+@sell_bp.route('/<sold_service_id>', methods=['PUT', 'DELETE', 'GET'])
+def sell_operations(sold_service_id):
     """
-    Met à jour un service vendu
+    Opérations sur un service vendu: récupération, mise à jour et suppression.
     ---
     tags:
       - sell
-    consumes:
-      - application/json
-    parameters:
-      - in: path
-        name: sold_service_id
-        required: true
-        type: string
-        description: ID du service vendu.
-      - in: body
-        name: body
-        required: true
-        schema:
-          type: object
-          properties:
-            advancement:
-              type: integer
-              description: Nouvel état d'avancement du service (chiffre de 0 à 5).
-    responses:
-      200:
-        description: Service vendu mis à jour avec succès.
-      404:
-        description: Service vendu non trouvé.
-    """
-    data = request.json
-    return update_sold_service(sold_service_id, data)
+    operations:
+      - method: GET
+        summary: Récupère les détails d'un service vendu.
+        parameters:
+          - in: path
+            name: sold_service_id
+            required: true
+            type: string
+            description: ID du service vendu.
+        responses:
+          200:
+            description: Détails du service vendu.
+          404:
+            description: Service vendu non trouvé.
 
-@sell_bp.route('/<sold_service_id>', methods=['DELETE'])
-def delete(sold_service_id):
-    """
-    Supprime un service vendu
-    ---
-    tags:
-      - sell
-    parameters:
-      - in: path
-        name: sold_service_id
-        required: true
-        type: string
-        description: ID du service vendu à supprimer.
-    responses:
-      200:
-        description: Service vendu supprimé avec succès.
-      404:
-        description: Service vendu non trouvé.
-    """
-    return delete_sold_service(sold_service_id)
+      - method: PUT
+        summary: Met à jour un service vendu, y compris le statut du service.
+        consumes:
+          - application/json
+        parameters:
+          - in: path
+            name: sold_service_id
+            required: true
+            type: string
+            description: ID du service vendu.
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: Statut du service ('validé', 'refusé', 'en attente').
+                # Ajoutez ici d'autres champs que vous pouvez mettre à jour.
+        responses:
+          200:
+            description: Service vendu mis à jour avec succès.
+          400:
+            description: Requête invalide.
+          404:
+            description: Service vendu non trouvé.
 
-@sell_bp.route('/<sold_service_id>', methods=['GET'])
-def get(sold_service_id):
+      - method: DELETE
+        summary: Supprime un service vendu.
+        parameters:
+          - in: path
+            name: sold_service_id
+            required: true
+            type: string
+            description: ID du service vendu à supprimer.
+        responses:
+          200:
+            description: Service vendu supprimé avec succès.
+          404:
+            description: Service vendu non trouvé.
     """
-    Récupère les détails d'un service vendu
-    ---
-    tags:
-      - sell
-    parameters:
-      - in: path
-        name: sold_service_id
-        required: true
-        type: string
-        description: ID du service vendu à récupérer.
-    responses:
-      200:
-        description: Détails du service vendu.
-      404:
-        description: Service vendu non trouvé.
-    """
-    return get_sold_service(sold_service_id)
+    if request.method == 'PUT':
+        data = request.json
+        return update_sold_service(sold_service_id, data)
+    elif request.method == 'DELETE':
+        return delete_sold_service(sold_service_id)
+    elif request.method == 'GET':
+        return get_sold_service(sold_service_id)
+      
