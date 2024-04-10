@@ -1,4 +1,4 @@
-from .model import Service
+from .model import Service, User, db
 from flask import jsonify
 
 def create_service(service_data):
@@ -12,8 +12,25 @@ def update_service(service_id, service_data):
         return jsonify({"error": "Service not found"}), 404
 
 def delete_service(service_id):
-    if Service.delete(service_id):
-        return jsonify({"message": "Service deleted successfully"}), 200
+    # Trouver le service à supprimer pour obtenir l'ID du prestataire
+    service = Service.find(service_id)
+    if service:
+        presta_id = service.presta_id  # Assurez-vous que cette propriété existe dans vos modèles de service
+        
+        # Supprimer le service
+        if Service.delete(service_id):
+            # Trouver le prestataire pour mettre à jour sa liste de services
+            presta = User.query.get(presta_id)
+            if presta:
+                if presta.service_ids:
+                    # Convertir la chaîne en liste, retirer l'ID du service, puis reconstruire la chaîne
+                    service_ids_list = presta.service_ids.split(',')
+                    if service_id in service_ids_list:
+                        service_ids_list.remove(service_id)
+                        presta.service_ids = ','.join(service_ids_list)
+                        db.session.commit()
+            
+            return jsonify({"message": "Service deleted successfully"}), 200
     else:
         return jsonify({"error": "Service not found"}), 404
 
