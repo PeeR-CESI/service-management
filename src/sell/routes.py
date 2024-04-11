@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from .service import create_sold_service, update_sold_service, delete_sold_service, get_sold_service
+from .service import get_all_sell_services, create_sold_service, update_sold_service, delete_sold_service, get_sold_service
 
 sell_bp = Blueprint('sell_bp', __name__)
 
@@ -117,3 +117,17 @@ def get(sold_service_id):
         description: Service vendu non trouvé.
     """
     return get_sold_service(sold_service_id)
+
+@sell_bp.route('/all', methods=['GET'])
+def get_sell_services():
+    """Récupère tous les services vendu
+    ---
+    tags:
+      - sell
+    responses:
+      200:
+        description: Liste de tous les services vendu
+      404:
+        description: Aucun service vendu trouvé
+    """
+    return get_all_sell_services()

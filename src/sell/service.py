@@ -49,3 +49,10 @@ def get_sold_service(sold_service_id):
         return jsonify(sold_service), 200
     else:
         return jsonify({"error": "Sold service not found"}), 404
+
+def get_all_sell_services():
+    sold_services = SoldService.find_all()
+    for sold_service in sold_services:
+        # Convertir ObjectId en str
+        sold_service['_id'] = str(sold_service['_id'])
+    return jsonify(sold_services), 200

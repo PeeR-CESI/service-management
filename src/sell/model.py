@@ -31,3 +31,8 @@ class SoldService:
             result['_id'] = str(result['_id'])
             return result
         return None
+
+    @staticmethod
+    def find_all():
+        result = sold_services_collection.find()
+        return list(result)
