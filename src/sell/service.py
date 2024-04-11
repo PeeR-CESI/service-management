@@ -29,7 +29,7 @@ def create_sold_service(service_id, sold_service_data):
 
 def update_sold_service(sold_service_id, sold_service_data):
     if 'status' in sold_service_data:
-        if sold_service_data['status'] not in ["validé", "refusé", "en attente"]:
+        if sold_service_data['status'] not in ["validé", "refusé", "en attente", "en cours", "terminé"]:
             return jsonify({"error": "Statut invalide"}), 400
     
     if SoldService.update(sold_service_id, sold_service_data):
